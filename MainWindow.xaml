@@ -21,5 +21,18 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Separator HorizontalAlignment="Left" Height="5" Margin="10,148,0,0" VerticalAlignment="Top" Width="191"/>
+        <Label Content="File Manager" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
+        <Button Content="Select File" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Grid x:Name="main_filemanager_pane" HorizontalAlignment="Left" Height="85" Margin="10,185,0,0" VerticalAlignment="Top" Width="191">
+            <Label Content="Filename:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="main_filename_label" Content="Label" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Top" Width="131"/>
+            <Label Content="Size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0" Width="38"/>
+            <Label x:Name="main_size_label" Content="Label" HorizontalAlignment="Left" Margin="60,26,0,0" VerticalAlignment="Top" Width="131"/>
+            <Button x:Name="main_upload_button" Content="Upload" HorizontalAlignment="Left" Margin="55,57,0,0" VerticalAlignment="Top" Width="75" Click="main_upload_button_Click"/>
+        </Grid>
+        <Separator HorizontalAlignment="Left" Height="5" Margin="10,298,0,0" VerticalAlignment="Top" Width="191"/>
+        <Label Content="Settings" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
+        <Label x:Name="main_uploadMSG_label" Content="Label" HorizontalAlignment="Left" Margin="90,158,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.463,0.054" Width="111" Height="27"/>
     </Grid>
 </Window>

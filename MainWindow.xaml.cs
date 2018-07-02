@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
 using Newtonsoft.Json;
 using peersplit_desktop.Model;
+using peersplit_desktop.Model.APIResponse;
+using Flurl.Http;
 
 namespace peersplit_desktop
 {
@@ -59,7 +48,24 @@ namespace peersplit_desktop
 
         private void LoggedIn()
         {
-            Console.WriteLine(user._savedInformation._username);
+            // Set the users details.
+            main_username_label.Content = user._savedInformation._username;
+            main_email_label.Content = user._savedInformation._email;
+            main_storage_label.Content = user._savedInformation._storageUsage + "MB/" +  user._savedInformation._storageTier + "MB";
+
+            // Get all of the the uers files in the network.
+            GetAllFilesInNetwork();
+        }
+
+        private async void GetAllFilesInNetwork()
+        {
+            // Call the login api.
+            var res = await("http://localhost:3000/file/getAll")
+                .PostUrlEncodedAsync(new { ownerID = user._savedInformation._id })
+                .ReceiveString();
+
+            FilmResponse filmRes = JsonConvert.DeserializeObject<FilmResponse>(res);
+            main_files_listView.ItemsSource = filmRes.data;
         }
 
     }

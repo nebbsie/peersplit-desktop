@@ -5,7 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:peersplit_desktop"
         mc:Ignorable="d"
-        Title="Peersplit" Height="450" Width="800"
+        Title="Peersplit" Height="450" Width="411"
 >
-    <Grid Height="419" VerticalAlignment="Top" Margin="0,0,0,0"/>
+    <Grid Height="419" VerticalAlignment="Top" Margin="0,0,0,0">
+        <Label x:Name="main_username_label" Content="-----" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" FontFamily="SF UI Text" FontSize="14"/>
+        <Label x:Name="main_email_label" Content="--@--" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" FontFamily="SF UI Text" FontSize="14"/>
+        <Label x:Name="main_storage_label" Content="--/--" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" FontFamily="SF UI Text" FontSize="14"/>
+        <Label Content="Account Details" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
+        <Separator HorizontalAlignment="Left" Height="5" Margin="10,34,0,0" VerticalAlignment="Top" Width="191"/>
+        <ListView x:Name="main_files_listView" HorizontalAlignment="Left" Height="399" Margin="206,10,0,0" VerticalAlignment="Top" Width="187" HorizontalContentAlignment="Center">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Filename" Width="100" DisplayMemberBinding="{Binding filename}" />
+                    <GridViewColumn Header="Size (MB)" Width="77" DisplayMemberBinding="{Binding size}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
 </Window>

@@ -88,6 +88,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\APIResponse\FilmResponse.cs" />
     <Compile Include="Model\APIResponse\LoginResponse.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserSettings.cs" />

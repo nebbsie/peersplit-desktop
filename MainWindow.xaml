@@ -23,16 +23,21 @@
         </ListView>
         <Separator HorizontalAlignment="Left" Height="5" Margin="10,148,0,0" VerticalAlignment="Top" Width="191"/>
         <Label Content="File Manager" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
-        <Button Content="Select File" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Select File" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="75" Click="SelectFile"/>
         <Grid x:Name="main_filemanager_pane" HorizontalAlignment="Left" Height="85" Margin="10,185,0,0" VerticalAlignment="Top" Width="191">
             <Label Content="Filename:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Label x:Name="main_filename_label" Content="Label" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Top" Width="131"/>
             <Label Content="Size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0" Width="38"/>
             <Label x:Name="main_size_label" Content="Label" HorizontalAlignment="Left" Margin="60,26,0,0" VerticalAlignment="Top" Width="131"/>
-            <Button x:Name="main_upload_button" Content="Upload" HorizontalAlignment="Left" Margin="55,57,0,0" VerticalAlignment="Top" Width="75" Click="main_upload_button_Click"/>
+            <Button x:Name="main_upload_button" Content="Upload" HorizontalAlignment="Left" Margin="55,57,0,0" VerticalAlignment="Top" Width="75" Click="UploadButton"/>
         </Grid>
-        <Separator HorizontalAlignment="Left" Height="5" Margin="10,298,0,0" VerticalAlignment="Top" Width="191"/>
-        <Label Content="Settings" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
+        <Separator HorizontalAlignment="Left" Height="5" Margin="10,295,0,0" VerticalAlignment="Top" Width="191"/>
+        <Label Content="Settings" HorizontalAlignment="Left" Margin="10,270,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="SF UI Text"/>
         <Label x:Name="main_uploadMSG_label" Content="Label" HorizontalAlignment="Left" Margin="90,158,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.463,0.054" Width="111" Height="27"/>
+        <Label HorizontalAlignment="Left" Margin="10,306,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="main_allowStorage_check" Content="Allow storage on device" HorizontalAlignment="Left" Margin="10,305,0,0" VerticalAlignment="Top" />
+        <TextBox x:Name="main_storage_amount" HorizontalAlignment="Left" Height="23" Margin="10,325,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="26" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="GB Allocation" HorizontalAlignment="Left" Margin="35,324,0,0" VerticalAlignment="Top"/>
+        <Button Content="Update" HorizontalAlignment="Left" Margin="63,355,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.027,0.23" Click="UpdateSettings"/>
     </Grid>
 </Window>

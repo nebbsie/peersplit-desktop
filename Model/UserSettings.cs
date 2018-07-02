@@ -8,11 +8,7 @@ namespace peersplit_desktop.Model
 {
     public class UserSettings
     {
-
-        public UserSettings()
-        {
-
-        }
+        public UserSettings() { }
 
         public string _username { get; set; }
         public string _password { get; set; }
@@ -21,5 +17,7 @@ namespace peersplit_desktop.Model
         public string _email { get; set; }
         public int _storageUsage { get; set; }
         public int _storageTier { get; set; }
+        public bool _allowStorage { get; set; }
+        public int _storageAmount { get; set; }
     }
 }

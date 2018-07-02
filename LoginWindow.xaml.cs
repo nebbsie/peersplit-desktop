@@ -22,7 +22,7 @@ namespace peersplit_desktop
         /// <summary>
         /// Called when the login button has been pressed.
         /// </summary>
-        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+        private async void LoginButton(object sender, RoutedEventArgs e)
         {
             login_invalidText_label.Visibility = Visibility.Hidden;
 
@@ -53,6 +53,9 @@ namespace peersplit_desktop
                         u._storageUsage = json.data.storageUsage;
                         u._email = json.data.email;
                         u._id = json.data.id;
+                        u._allowStorage = true;
+                        u._storageAmount = 20;
+
                         // Return the settings from the API.
                         _user = u;
                         DialogResult = true;

@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <TextBox x:Name="login_username_input" HorizontalAlignment="Center" Height="45" Margin="61,122,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <PasswordBox x:Name="login_password_input" HorizontalAlignment="Center" Margin="0,203,0,0" VerticalAlignment="Top" Width="270" Height="45" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button x:Name="login_login_button"  Content="Login" Margin="0,276,0,134" VerticalAlignment="Center" Width="174" Click="Button_ClickAsync" Height="60" HorizontalAlignment="Center"/>
+        <Button x:Name="login_login_button"  Content="Login" Margin="0,276,0,134" VerticalAlignment="Center" Width="174" Click="LoginButton" Height="60" HorizontalAlignment="Center"/>
         <Label Content="Login to your Peersplit account." HorizontalAlignment="Center" Margin="78,40,78,0" VerticalAlignment="Top" RenderTransformOrigin="-0.316,-0.231" Width="236" FontWeight="Bold" FontFamily="SF UI Text" FontSize="14" Height="27"/>
         <Label Content="Username" HorizontalAlignment="Center" Margin="158,96,158,0" VerticalAlignment="Top" Height="26" Width="76" FontSize="14"/>
         <Label Content="Password" HorizontalAlignment="Center" Margin="159,172,159,0" VerticalAlignment="Top" Height="26" Width="74" FontSize="14"/>

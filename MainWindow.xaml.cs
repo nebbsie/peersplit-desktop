@@ -43,24 +43,26 @@ namespace peersplit_desktop
                     // Logged in correctly, save the new infomration from API to the user object.
                     user._savedInformation = login._user;
                     user.SaveToFile();
-                    LoggedIn();
+                    UserLoggedIn();
                 }
 
             }else
             {
-                LoggedIn();
+                UserLoggedIn();
             }
         }
 
         /// <summary>
         /// Called if the user had been logged in, it it downloads all users data.
         /// </summary>
-        private void LoggedIn()
+        private void UserLoggedIn()
         {
             // Set the users details.
             main_username_label.Content = user._savedInformation._username;
             main_email_label.Content = user._savedInformation._email;
             main_storage_label.Content = user._savedInformation._storageUsage + "MB/" +  user._savedInformation._storageTier + "MB";
+            main_storage_amount.Text = user._savedInformation._storageAmount.ToString();
+            main_allowStorage_check.IsChecked = user._savedInformation._allowStorage;
 
             // Get all of the the uers files in the network.
             GetAllFilesInNetwork();
@@ -91,7 +93,7 @@ namespace peersplit_desktop
         /// <summary>
         /// Present a file dialog screen.
         /// </summary>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SelectFile(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
@@ -102,22 +104,21 @@ namespace peersplit_desktop
             if (result == true)
             {
                 main_filemanager_pane.Visibility = Visibility.Visible;
+
+                // Get the filename/location/size and present it on screen.
                 fileLocation = dlg.FileName;
                 double size = new System.IO.FileInfo(fileLocation).Length;
+                double MB = (size / 1024) / 1024;
 
                 main_filename_label.Content = dlg.SafeFileName;
-                double a = (size / 1024) / 1024;
-                Console.WriteLine(a);
-                main_size_label.Content = Truncate(a, 2) + " MB";
-
-
+                main_size_label.Content = Truncate(MB, 2) + " MB";
             }
         }
 
         /// <summary>
         /// Upload the file to the network.
         /// </summary>
-        private async void main_upload_button_Click(object sender, RoutedEventArgs e)
+        private async void UploadButton(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -127,36 +128,57 @@ namespace peersplit_desktop
                     .AddFile("file", fileLocation)
                     ).ReceiveString();
 
-                main_uploadMSG_label.Visibility = Visibility.Visible;
-
                 UploadResponse json = JsonConvert.DeserializeObject<UploadResponse>(res);
 
                 if (json.success)
                 {
-                    main_uploadMSG_label.Foreground = Brushes.Green;
-                    main_uploadMSG_label.Content = "Uploaded file!";
+                    SetUploadMessage(Brushes.Green, "Uploaded file!");
                     GetAllFilesInNetwork();
                 }
                 else
                 {
-                    main_uploadMSG_label.Foreground = Brushes.Red;
-                    main_uploadMSG_label.Content = "Failed to upload!";
+                    SetUploadMessage(Brushes.Red, "Failed to upload!");
                 }
             }
             catch
             {
-                main_uploadMSG_label.Visibility = Visibility.Visible;
-                main_uploadMSG_label.Foreground = Brushes.Red;
-                main_uploadMSG_label.Content = "Failed to upload!";
+                SetUploadMessage(Brushes.Red, "Failed to upload!");
             }
-
         }
 
-        public static double Truncate(double val, int digits)
+        /// <summary>
+        /// Sets the upload message parameters
+        /// </summary>
+        private void SetUploadMessage(Brush brush = null, string msg = "", Visibility vis = Visibility.Visible)
+        {
+            if (brush != null)
+            {
+                main_uploadMSG_label.Foreground = brush;
+            }
+
+            main_uploadMSG_label.Visibility = vis;
+            main_uploadMSG_label.Content = msg;
+        }
+
+        /// <summary>
+        /// Take a double and only keep up to a certain amount of digits.
+        /// </summary>
+        private static double Truncate(double val, int digits)
         {
             double mult = Math.Pow(10.0, digits);
             double result = Math.Truncate(mult * val) / mult;
             return result;
+        }
+
+        /// <summary>
+        /// Update the user settings.
+        /// </summary>
+        private void UpdateSettings(object sender, RoutedEventArgs e)
+        {
+            user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
+            user._savedInformation._storageAmount = Int32.Parse(main_storage_amount.Text);
+
+            user.SaveToFile();
         }
     }
 }

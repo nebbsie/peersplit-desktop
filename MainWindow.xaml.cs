@@ -28,12 +28,44 @@ namespace peersplit_desktop
         {
             user = new User();
 
+            SetupNotifyIcon();
             InitializeComponent();
             InitialiseVisibilities();
             SetupUI();
             SetupJobTimer();
         }
 
+        /// <summary>
+        /// Creates the notification bar for the application and links it to the double click functionality.
+        /// </summary>
+        private void SetupNotifyIcon()
+        {
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new System.Drawing.Icon("icon.ico");
+            ni.Visible = true;
+            ni.MouseDoubleClick += DoubleClickNotificationIcon;
+        }
+
+        /// <summary>
+        /// Called when the notification icon is double clicked.
+        /// </summary>
+        private void DoubleClickNotificationIcon(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+        }
+
+        /// <summary>
+        /// Called when a user minimises the application
+        /// </summary>
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == System.Windows.WindowState.Minimized)
+            {
+                this.Hide();
+            }
+            base.OnStateChanged(e);
+        }
 
         /// <summary>
         /// Called if the user had been logged in, it it downloads all users data.

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:peersplit_desktop"
         mc:Ignorable="d"
-        Title="Peersplit" Height="450" Width="411" ResizeMode="NoResize"
+        Title="Peersplit" Height="450" Width="411" ResizeMode="CanMinimize"
 >
     <Grid Height="419" VerticalAlignment="Top" Margin="0,0,0,0">
         <Label x:Name="main_username_label" Content="-----" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" FontFamily="SF UI Text" FontSize="14"/>

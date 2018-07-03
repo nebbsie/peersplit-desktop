@@ -79,6 +79,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controller\FileAPIController.cs" />
+    <Compile Include="Controller\HolderAPIController.cs" />
+    <Compile Include="Controller\MathUtilities.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>

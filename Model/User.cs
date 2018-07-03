@@ -26,7 +26,17 @@ namespace peersplit_desktop.Model
             if (GetIfFirstTimeUse())
             {
                 CreateAppDataFolder();
-                _initalised = false;
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+
+                // Check if the login was a success.
+                if ((bool)login.DialogResult)
+                {
+                    // Logged in correctly, save the new infomration from API to the user object.
+                    _savedInformation = login._user;
+                    SaveToFile();
+                    _initalised = true;
+                }
             }
             else
             {

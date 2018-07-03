@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace peersplit_desktop.Model.APIResponse
 {
-    class FilmResponse
+    public class FilmResponse
     {
         public bool success { get; set; }
         public List<Film> data { get; set; }
     }
 
-    class Film
+    public class Film
     {
         private double _size;
         public double size

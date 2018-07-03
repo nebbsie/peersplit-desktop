@@ -2,9 +2,11 @@
 using System.Windows;
 using Newtonsoft.Json;
 using peersplit_desktop.Model;
+using peersplit_desktop.Controller;
 using peersplit_desktop.Model.APIResponse;
 using Flurl.Http;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace peersplit_desktop
 {
@@ -16,6 +18,7 @@ namespace peersplit_desktop
         #region variables
         private User user;
         private string fileLocation;
+        private DispatcherTimer jobTimer;
         #endregion
 
         /// <summary>
@@ -23,39 +26,19 @@ namespace peersplit_desktop
         /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
-
-            main_filemanager_pane.Visibility = Visibility.Hidden;
-            main_uploadMSG_label.Visibility = Visibility.Hidden;
-
-            // Initialise the user and get settings.
             user = new User();
 
-            // If not initialised, ask for user to login.
-            if (!user._initalised)
-            {
-                LoginWindow login = new LoginWindow();
-                login.ShowDialog();
-
-                // Check if the login was a success.
-                if ((bool)login.DialogResult)
-                {
-                    // Logged in correctly, save the new infomration from API to the user object.
-                    user._savedInformation = login._user;
-                    user.SaveToFile();
-                    UserLoggedIn();
-                }
-
-            }else
-            {
-                UserLoggedIn();
-            }
+            InitializeComponent();
+            InitialiseVisibilities();
+            SetupUI();
+            SetupJobTimer();
         }
+
 
         /// <summary>
         /// Called if the user had been logged in, it it downloads all users data.
         /// </summary>
-        private void UserLoggedIn()
+        private async void SetupUI()
         {
             // Set the users details.
             main_username_label.Content = user._savedInformation._username;
@@ -65,30 +48,24 @@ namespace peersplit_desktop
             main_allowStorage_check.IsChecked = user._savedInformation._allowStorage;
 
             // Get all of the the uers files in the network.
-            GetAllFilesInNetwork();
+            FilmResponse res = await FileAPIController.GetAllFilesInNetwork(user._savedInformation._id);
+            main_files_listView.ItemsSource = res.data;
+
+            
         }
 
         /// <summary>
-        /// Get all of the files the user has uploaded and present them on screen.
+        /// Starts a timer for the holder jobs.
         /// </summary>
-        private async void GetAllFilesInNetwork()
+        private void SetupJobTimer()
         {
-            try
-            {
-                // Call the login api.
-                var res = await ("http://localhost:3000/file/getAll")
-                    .PostUrlEncodedAsync(new { ownerID = user._savedInformation._id })
-                    .ReceiveString();
-
-                FilmResponse filmRes = JsonConvert.DeserializeObject<FilmResponse>(res);
-                main_files_listView.ItemsSource = filmRes.data;
-            }
-            catch
-            {
-                Console.WriteLine("Failed to get files");
-            }
-            
+            jobTimer = new DispatcherTimer();
+            jobTimer.Tick += new EventHandler(HolderAPIController.DoHolderJobs);
+            jobTimer.Interval = new TimeSpan(0, 0, 5);
+            jobTimer.Start();
         }
+
+        #region UI Buttons
 
         /// <summary>
         /// Present a file dialog screen.
@@ -111,8 +88,19 @@ namespace peersplit_desktop
                 double MB = (size / 1024) / 1024;
 
                 main_filename_label.Content = dlg.SafeFileName;
-                main_size_label.Content = Truncate(MB, 2) + " MB";
+                main_size_label.Content = MathUtilities.Truncate(MB, 2) + " MB";
             }
+        }
+
+        /// <summary>
+        /// Update the user settings.
+        /// </summary>
+        private void UpdateSettings(object sender, RoutedEventArgs e)
+        {
+            user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
+            user._savedInformation._storageAmount = Int32.Parse(main_storage_amount.Text);
+
+            user.SaveToFile();
         }
 
         /// <summary>
@@ -120,30 +108,30 @@ namespace peersplit_desktop
         /// </summary>
         private async void UploadButton(object sender, RoutedEventArgs e)
         {
-            try
+            bool uploaded = await FileAPIController.UploadFile(user._savedInformation._id, fileLocation);
+            if (uploaded)
             {
-                var res = await ("http://localhost:3000/file/new")
-                    .PostMultipartAsync(mp => mp
-                    .AddStringParts(new { ownerID = user._savedInformation._id })
-                    .AddFile("file", fileLocation)
-                    ).ReceiveString();
-
-                UploadResponse json = JsonConvert.DeserializeObject<UploadResponse>(res);
-
-                if (json.success)
-                {
-                    SetUploadMessage(Brushes.Green, "Uploaded file!");
-                    GetAllFilesInNetwork();
-                }
-                else
-                {
-                    SetUploadMessage(Brushes.Red, "Failed to upload!");
-                }
+                SetUploadMessage(Brushes.Green, "Uploaded file!");
+                FilmResponse res = await FileAPIController.GetAllFilesInNetwork(user._savedInformation._id);
+                main_files_listView.ItemsSource = res.data;
             }
-            catch
+            else
             {
                 SetUploadMessage(Brushes.Red, "Failed to upload!");
             }
+        }
+
+        #endregion
+
+        #region UI Helpers
+
+        /// <summary>
+        /// Initialise parts of the UI's visibilitiy.
+        /// </summary>
+        private void InitialiseVisibilities()
+        {
+            main_filemanager_pane.Visibility = Visibility.Hidden;
+            main_uploadMSG_label.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -160,25 +148,7 @@ namespace peersplit_desktop
             main_uploadMSG_label.Content = msg;
         }
 
-        /// <summary>
-        /// Take a double and only keep up to a certain amount of digits.
-        /// </summary>
-        private static double Truncate(double val, int digits)
-        {
-            double mult = Math.Pow(10.0, digits);
-            double result = Math.Truncate(mult * val) / mult;
-            return result;
-        }
+        #endregion
 
-        /// <summary>
-        /// Update the user settings.
-        /// </summary>
-        private void UpdateSettings(object sender, RoutedEventArgs e)
-        {
-            user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
-            user._savedInformation._storageAmount = Int32.Parse(main_storage_amount.Text);
-
-            user.SaveToFile();
-        }
     }
 }

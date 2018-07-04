@@ -76,7 +76,7 @@ namespace peersplit_desktop
         {
             jobTimer = new DispatcherTimer();
             jobTimer.Tick += new EventHandler(holder.DoHolderJobs);
-            jobTimer.Interval = new TimeSpan(0, 0, 5);
+            jobTimer.Interval = new TimeSpan(0, 0, 2);
             jobTimer.Start();
         }
 
@@ -115,6 +115,7 @@ namespace peersplit_desktop
             // If active holder act as an update settings button.
             if (holder._savedInformation.activeHolder)
             {
+                //TODO: make sure the API is updated with the new infomration.
                 user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
                 holder._savedInformation.storageAmount = Int32.Parse(main_storage_amount.Text);
                 user.SaveToFile();
@@ -124,7 +125,7 @@ namespace peersplit_desktop
                 holder._savedInformation.activeHolder = true;
                 holder.SaveToFile();
                 UpdateSettingsPanel();
-                holder.RegisterWithAPIAsync();
+                holder.RegisterWithAPI();
             }
             
         }

@@ -12,6 +12,7 @@ namespace peersplit_desktop.Model
         public string _folderLocation { get; set; }
         public string _holderSettingsLocation { get; set; }
         public bool _initalised { get; set; }
+        public int userID { get; set; }
 
         public Holder(int id)
         {
@@ -37,7 +38,7 @@ namespace peersplit_desktop.Model
                 _savedInformation = ReadHolderSettings();
             }
 
-            _savedInformation.id = id;
+            userID = id;
         }
 
         /// <summary>
@@ -45,18 +46,27 @@ namespace peersplit_desktop.Model
         /// </summary>
         public void DoHolderJobs(object sender, EventArgs e)
         {
-            // Update last online time.
+            // Update last online time. * 
             // Check for jobs to do.
             // Do each job.
-            Console.WriteLine("Doing Task");
+           
+
+            // Only try to do jobs if the holder is online.
+            if (_savedInformation.activeHolder)
+            {
+                Console.WriteLine("Doing Task");
+                HolderAPIController.UpdateHolder(_savedInformation.id);
+            }
+           
         }
+
 
         /// <summary>
         /// Attempts to register a new holder in the API.
         /// </summary>
-        public async void RegisterWithAPIAsync()
+        public async void RegisterWithAPI()
         {
-            HolderCreateResponse res = await HolderAPIController.RegisterHolder(_savedInformation.id, _savedInformation.name, _savedInformation.storageAmount);
+            HolderCreateResponse res = await HolderAPIController.RegisterHolder(userID, _savedInformation.name, _savedInformation.storageAmount);
             if (res.success)
             {
                 _savedInformation.id = res.data;

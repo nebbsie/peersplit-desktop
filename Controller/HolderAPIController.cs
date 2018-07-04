@@ -9,7 +9,6 @@ namespace peersplit_desktop.Controller
 {
     public static class HolderAPIController
     {
-
         /// <summary>
         ///  Registers the storage holder into the database.
         /// </summary>
@@ -35,5 +34,20 @@ namespace peersplit_desktop.Controller
             }
         }
 
+        /// <summary>
+        ///  Updates the holders last online time in the database.
+        /// </summary>
+        public async static void UpdateHolder(int id)
+        {
+            try
+            {
+                // Call the  api.
+                var res = await ("http://localhost:3000/holder/update").PostUrlEncodedAsync(new { holderID = id }).ReceiveString();
+            }
+            catch
+            {
+                Console.WriteLine("Failed to create holder");
+            }
+        }
     }
 }

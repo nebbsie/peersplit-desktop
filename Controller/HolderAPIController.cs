@@ -1,22 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Flurl.Http;
+using Newtonsoft.Json;
+using peersplit_desktop.Model;
+using peersplit_desktop.Model.APIResponse;
 
 namespace peersplit_desktop.Controller
 {
-    public class HolderAPIController
+    public static class HolderAPIController
     {
+
         /// <summary>
-        /// Do the jobs required by each holder every n seconds.
+        ///  Registers the storage holder into the database.
         /// </summary>
-        public static void DoHolderJobs(object sender, EventArgs e)
+        public async static Task<HolderCreateResponse> RegisterHolder(int id, string _holderName, int bytesAvailible)
         {
-            // Update last online time.
-            // Check for jobs to do.
-            // Do each job.
-            Console.WriteLine("Doing Task");
+            try
+            {
+                // Convert gigabytes into bytes.
+                long bytes = (bytesAvailible * 1024) * 1024;
+
+                // Call the login api.
+                var res = await("http://localhost:3000/holder/create")
+                    .PostUrlEncodedAsync(new { ownerID = id, holderName = _holderName, bytesAvailable = bytes })
+                    .ReceiveString();
+
+                HolderCreateResponse filmRes = JsonConvert.DeserializeObject<HolderCreateResponse>(res);
+                return filmRes;
+            }
+            catch
+            {
+                Console.WriteLine("Failed to create holder");
+                return null;
+            }
         }
 
     }

@@ -11,12 +11,13 @@ using System.Windows.Threading;
 namespace peersplit_desktop
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Attempts to register a new holder in the API.
     /// </summary>
     public partial class MainWindow : Window
     {
         #region variables
         private User user;
+        private Holder holder;
         private string fileLocation;
         private DispatcherTimer jobTimer;
         #endregion
@@ -27,10 +28,11 @@ namespace peersplit_desktop
         public MainWindow()
         {
             user = new User();
+            holder = new Holder(user._savedInformation._id);
 
             SetupNotifyIcon();
             InitializeComponent();
-            InitialiseVisibilities();
+            InitialiseUI();
             SetupUI();
             SetupJobTimer();
         }
@@ -68,31 +70,12 @@ namespace peersplit_desktop
         }
 
         /// <summary>
-        /// Called if the user had been logged in, it it downloads all users data.
-        /// </summary>
-        private async void SetupUI()
-        {
-            // Set the users details.
-            main_username_label.Content = user._savedInformation._username;
-            main_email_label.Content = user._savedInformation._email;
-            main_storage_label.Content = user._savedInformation._storageUsage + "MB/" +  user._savedInformation._storageTier + "MB";
-            main_storage_amount.Text = user._savedInformation._storageAmount.ToString();
-            main_allowStorage_check.IsChecked = user._savedInformation._allowStorage;
-
-            // Get all of the the uers files in the network.
-            FilmResponse res = await FileAPIController.GetAllFilesInNetwork(user._savedInformation._id);
-            main_files_listView.ItemsSource = res.data;
-
-            
-        }
-
-        /// <summary>
         /// Starts a timer for the holder jobs.
         /// </summary>
         private void SetupJobTimer()
         {
             jobTimer = new DispatcherTimer();
-            jobTimer.Tick += new EventHandler(HolderAPIController.DoHolderJobs);
+            jobTimer.Tick += new EventHandler(holder.DoHolderJobs);
             jobTimer.Interval = new TimeSpan(0, 0, 5);
             jobTimer.Start();
         }
@@ -129,10 +112,21 @@ namespace peersplit_desktop
         /// </summary>
         private void UpdateSettings(object sender, RoutedEventArgs e)
         {
-            user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
-            user._savedInformation._storageAmount = Int32.Parse(main_storage_amount.Text);
-
-            user.SaveToFile();
+            // If active holder act as an update settings button.
+            if (holder._savedInformation.activeHolder)
+            {
+                user._savedInformation._allowStorage = (bool)main_allowStorage_check.IsChecked;
+                holder._savedInformation.storageAmount = Int32.Parse(main_storage_amount.Text);
+                user.SaveToFile();
+            }
+            else
+            {
+                holder._savedInformation.activeHolder = true;
+                holder.SaveToFile();
+                UpdateSettingsPanel();
+                holder.RegisterWithAPIAsync();
+            }
+            
         }
 
         /// <summary>
@@ -160,10 +154,10 @@ namespace peersplit_desktop
         /// <summary>
         /// Initialise parts of the UI's visibilitiy.
         /// </summary>
-        private void InitialiseVisibilities()
+        private void InitialiseUI()
         {
             main_filemanager_pane.Visibility = Visibility.Hidden;
-            main_uploadMSG_label.Visibility = Visibility.Hidden;
+            main_uploadMSG_label.Visibility = Visibility.Hidden; 
         }
 
         /// <summary>
@@ -178,6 +172,43 @@ namespace peersplit_desktop
 
             main_uploadMSG_label.Visibility = vis;
             main_uploadMSG_label.Content = msg;
+        }
+
+        /// <summary>
+        /// Update the settings panel.
+        /// </summary>
+        private void UpdateSettingsPanel()
+        {
+            if (holder._savedInformation.activeHolder)
+            {
+                main_activate_button.Content = "Update";
+                main_storage_amount.Text = holder._savedInformation.storageAmount.ToString();
+            }
+            else
+            {
+                main_activate_button.Content = "Activate";
+                main_storage_amount.Text = "0";
+            }
+        }
+
+        /// <summary>
+        /// Called if the user had been logged in, it it downloads all users data.
+        /// </summary>
+        private async void SetupUI()
+        {
+            // Set the users details.
+            main_username_label.Content = user._savedInformation._username;
+            main_email_label.Content = user._savedInformation._email;
+            main_storage_label.Content = user._savedInformation._storageUsage + "MB/" + user._savedInformation._storageTier + "MB";
+            main_storage_amount.Text = holder._savedInformation.storageAmount.ToString();
+            main_allowStorage_check.IsChecked = user._savedInformation._allowStorage;
+
+            // Get all of the the uers files in the network.
+            FilmResponse res = await FileAPIController.GetAllFilesInNetwork(user._savedInformation._id);
+            main_files_listView.ItemsSource = res.data;
+
+            // Update the settings panel, changes button from Activate to Update etc.
+            UpdateSettingsPanel();
         }
 
         #endregion

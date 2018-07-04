@@ -54,7 +54,6 @@ namespace peersplit_desktop
                         u._email = json.data.email;
                         u._id = json.data.id;
                         u._allowStorage = true;
-                        u._storageAmount = 20;
 
                         // Return the settings from the API.
                         _user = u;

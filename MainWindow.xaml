@@ -38,6 +38,6 @@
         <CheckBox x:Name="main_allowStorage_check" Content="Allow storage on device" HorizontalAlignment="Left" Margin="10,305,0,0" VerticalAlignment="Top" />
         <TextBox x:Name="main_storage_amount" HorizontalAlignment="Left" Height="23" Margin="10,325,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="26" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label Content="GB Allocation" HorizontalAlignment="Left" Margin="35,324,0,0" VerticalAlignment="Top"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="63,355,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.027,0.23" Click="UpdateSettings"/>
+        <Button x:Name="main_activate_button" Content="Activate" HorizontalAlignment="Left" Margin="62,362,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.027,0.23" Click="UpdateSettings"/>
     </Grid>
 </Window>

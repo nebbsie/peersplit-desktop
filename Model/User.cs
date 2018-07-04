@@ -15,6 +15,7 @@ namespace peersplit_desktop.Model
         public string _folderLocation { get; set; }
         public string _userSettingsLocation { get; set; }
         public bool _initalised { get; set; }
+        
 
         public User()
         {
@@ -70,18 +71,18 @@ namespace peersplit_desktop.Model
         /// </summary>
         private UserSettings ReadUserSettings()
         {
-            string rawJSON = File.ReadAllText(_userSettingsLocation);
-            return JsonConvert.DeserializeObject<UserSettings>(rawJSON);
+            var res = File.ReadAllText(_userSettingsLocation);
+            return JsonConvert.DeserializeObject<UserSettings>(res);
         }
 
         /// <summary>
-        /// Save the user settings to file.
+        /// Save the object to the file.
         /// </summary>
         public void SaveToFile()
         {
-            string json = JsonConvert.SerializeObject(_savedInformation);
-            File.WriteAllText(_userSettingsLocation, json);
+            _savedInformation.SaveToFile(_savedInformation, _userSettingsLocation);
         }
+
     }
 
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace peersplit_desktop.Model
 {
-    public class UserSettings
+    public class UserSettings : Settings
     {
         public UserSettings() { }
 
@@ -18,6 +13,6 @@ namespace peersplit_desktop.Model
         public int _storageUsage { get; set; }
         public int _storageTier { get; set; }
         public bool _allowStorage { get; set; }
-        public int _storageAmount { get; set; }
+        
     }
 }
